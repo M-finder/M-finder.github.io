@@ -1,0 +1,373 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>redis 连环炮 | M-finder</title><meta name="keywords" content="m-finder,php,laravel"><meta name="author" content="m-finder"><meta name="copyright" content="m-finder"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. 什么是 redisredis 是一个基于内存且支持持久化的高性能 key-value 数据库。 redis 优点 读写速度快 支持持久化 支持事务 数据类型丰富 支持主从，读写分离  2. redis 支持的数据类型redis 一共 5 种数据类型：string，hash，list，set，zset。 string 字符串string 是最简单的类型，支持字符串，浮点数，整数。  获取值：g">
+<meta property="og:type" content="website">
+<meta property="og:title" content="redis 连环炮">
+<meta property="og:url" content="https://www.m-finder.com/draft/redis-salvo.html">
+<meta property="og:site_name" content="M-finder">
+<meta property="og:description" content="1. 什么是 redisredis 是一个基于内存且支持持久化的高性能 key-value 数据库。 redis 优点 读写速度快 支持持久化 支持事务 数据类型丰富 支持主从，读写分离  2. redis 支持的数据类型redis 一共 5 种数据类型：string，hash，list，set，zset。 string 字符串string 是最简单的类型，支持字符串，浮点数，整数。  获取值：g">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.m-finder.com/images/top.jpg">
+<meta property="article:published_time" content="2021-05-25T15:59:59.000Z">
+<meta property="article:modified_time" content="2021-07-12T06:40:56.605Z">
+<meta property="article:author" content="m-finder">
+<meta property="article:tag" content="m-finder">
+<meta property="article:tag" content="php">
+<meta property="article:tag" content="laravel">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.m-finder.com/images/top.jpg"><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://www.m-finder.com/draft/redis-salvo"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-07-12 14:40:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="/images/avatar.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image: url('/images/top.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">M-finder</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="page-site-info"><h1 id="site-title">redis 连环炮</h1></div></header><main class="layout" id="content-inner"><div id="page"><div id="article-container"><h4 id="1-什么是-redis"><a href="#1-什么是-redis" class="headerlink" title="1. 什么是 redis"></a>1. 什么是 redis</h4><p>redis 是一个基于内存且支持持久化的高性能 key-value 数据库。</p>
+<h4 id="redis-优点"><a href="#redis-优点" class="headerlink" title="redis 优点"></a>redis 优点</h4><ol>
+<li>读写速度快</li>
+<li>支持持久化</li>
+<li>支持事务</li>
+<li>数据类型丰富</li>
+<li>支持主从，读写分离</li>
+</ol>
+<h4 id="2-redis-支持的数据类型"><a href="#2-redis-支持的数据类型" class="headerlink" title="2. redis 支持的数据类型"></a>2. redis 支持的数据类型</h4><p>redis 一共 5 种数据类型：string，hash，list，set，zset。</p>
+<h5 id="string-字符串"><a href="#string-字符串" class="headerlink" title="string 字符串"></a>string 字符串</h5><p>string 是最简单的类型，支持<code>字符串</code>，<code>浮点数</code>，<code>整数</code>。</p>
+<ol>
+<li>获取值：get key</li>
+<li>设置值：set key value</li>
+<li>删除值：del key</li>
+<li>自增：incr key</li>
+<li>自减：decr key</li>
+<li>按值自增：incrby key value</li>
+<li>按值自减：decryby key value</li>
+</ol>
+<p><img src= "/img/loading.gif" data-lazy-src="/images/redis-string.png" alt="redis-string"></p>
+<h6 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h6><ol>
+<li>用户 session</li>
+<li>统计计数器</li>
+</ol>
+<h5 id="hash-散列"><a href="#hash-散列" class="headerlink" title="hash 散列"></a>hash 散列</h5><p>hash 可以存储多个键值对之间的映射，可以方便的对同类数据进行归类整合存储。</p>
+<p>值的类型同字符串，也可以进行自增操作。</p>
+<ol>
+<li>设置值：hset user 1:name wu</li>
+<li>获取值：hget user 1:age 18</li>
+<li>按值自增：hincrbr user 1:age 2</li>
+<li>获取所有：hgetall user</li>
+<li>获取多个：hmget user 1:name 1:age</li>
+<li>设置多个：hmset user 2:name xu 2:age 18</li>
+<li>删除一个：hdel user 1:age</li>
+<li>删除全部：del user</li>
+</ol>
+<p><img src= "/img/loading.gif" data-lazy-src="/images/redis-hash.png" alt="redis-hash"></p>
+<h6 id="使用场景："><a href="#使用场景：" class="headerlink" title="使用场景："></a>使用场景：</h6><ol>
+<li>购物车</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hset cart:1001 10091 1  // 用户 1001 添加商品 10091 1件</span><br><span class="line">hset cart:1001 10021 2  // 用户 1001 添加商品 10021 2件</span><br><span class="line">hincrby cart:1001 10091 1 // 增加商品</span><br><span class="line">hlen cart:1001  // 获取商品总数</span><br><span class="line">hdel cart:1001 10091 // 删除商品</span><br><span class="line">hgetall cart:1001</span><br></pre></td></tr></table></figure>
+<h5 id="set-集合"><a href="#set-集合" class="headerlink" title="set 集合"></a>set 集合</h5><p>字符串的无序集合，每个字符串都是唯一的。可以方便的对数据进行交集、并集、差集等操作。</p>
+<ol>
+<li>设置值：sadd key value</li>
+</ol>
+<h6 id="使用场景：-1"><a href="#使用场景：-1" class="headerlink" title="使用场景："></a>使用场景：</h6><ol>
+<li>好友/关注/粉丝/感兴趣的人集合</li>
+<li>随机展示数据</li>
+<li>黑白名单</li>
+</ol>
+<h4 id="使用场景-1"><a href="#使用场景-1" class="headerlink" title="使用场景"></a>使用场景</h4><p>单值缓存，key，value，MSET，MGET<br>对象缓存，key，json:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">MSET user:1:name wu user:1:balance 1000</span><br><span class="line">MGET user:1:name user:1:balance</span><br><span class="line">HMSET user 1:name wu 1:balance 10000</span><br><span class="line">// 分段</span><br><span class="line">HMSET user1000 1:name wu 1:balance 1000</span><br><span class="line">HMSET user2000 10001:name wu 10001:balance 1000</span><br></pre></td></tr></table></figure>
+
+<p>分布式锁，SETNX</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SETNX product:1 true    //返回 1 表示成功</span><br><span class="line">SETNX product:1 false   //返回 0 表示失败</span><br><span class="line">DELETE product:1        // 执行完释放锁</span><br><span class="line">SETNX product:1 true ex 10 nx //防止程序意外终止导致死锁</span><br></pre></td></tr></table></figure>
+
+
+<p>哈希结构优点：</p>
+<ol>
+<li>同类数据可以归类整合存储，方便数据管理</li>
+<li>相比 string 操作消耗更小</li>
+<li>相比 string 更节省空间</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>过期功能只能用在 key 上</li>
+<li>集群架构下不适合大规模使用</li>
+</ol>
+<p>数据持久化、性能测试、故障恢复以及防止数据丢失。</p>
+<p>缓存穿透 ： DB 承受了没有必要的查询流量，意思就是查到空值的时候没有做缓存处理，再次查询的时候继续读库了<br>缓存击穿：热点 Key，大量并发读请求引起的小雪崩， 就是缓存在某个时间点过期的时候，恰好在这个时间点对这个 Key 有大量的并发请求过来，这些请求发现缓存过期一般都会从后端 DB 加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端 DB 压垮<br>缓存雪崩：缓存设置同一过期时间，引发的大量的读取数据库操作</p>
+</div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="/images/avatar.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">m-finder</div><div class="author-info__description">happy coding</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/m-finder"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/m-finder" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:m@m-finder.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/07/12/2021-to-do-list/" title="2021 年计划清单"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2021 年计划清单"/></a><div class="content"><a class="title" href="/2021/07/12/2021-to-do-list/" title="2021 年计划清单">2021 年计划清单</a><time datetime="2021-07-12T06:40:56.601Z" title="发表于 2021-07-12 14:40:56">2021-07-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/19/m1-php-ssh2/" title="mac m1 下安装 php7.4 ssh2 扩展"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mac m1 下安装 php7.4 ssh2 扩展"/></a><div class="content"><a class="title" href="/2021/05/19/m1-php-ssh2/" title="mac m1 下安装 php7.4 ssh2 扩展">mac m1 下安装 php7.4 ssh2 扩展</a><time datetime="2021-05-19T13:22:13.000Z" title="发表于 2021-05-19 21:22:13">2021-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/11/centos-php74/" title="centos php7.4 安装记录"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="centos php7.4 安装记录"/></a><div class="content"><a class="title" href="/2021/05/11/centos-php74/" title="centos php7.4 安装记录">centos php7.4 安装记录</a><time datetime="2021-05-11T13:22:13.000Z" title="发表于 2021-05-11 21:22:13">2021-05-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/21/laravel-excel-import-bug/" title="laravel 导入 excel 报错排查记录"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="laravel 导入 excel 报错排查记录"/></a><div class="content"><a class="title" href="/2021/04/21/laravel-excel-import-bug/" title="laravel 导入 excel 报错排查记录">laravel 导入 excel 报错排查记录</a><time datetime="2021-04-21T13:22:13.000Z" title="发表于 2021-04-21 21:22:13">2021-04-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/13/distributed-system/" title="一句话看懂集群、微服务和分布式的区别"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一句话看懂集群、微服务和分布式的区别"/></a><div class="content"><a class="title" href="/2021/04/13/distributed-system/" title="一句话看懂集群、微服务和分布式的区别">一句话看懂集群、微服务和分布式的区别</a><time datetime="2021-04-13T14:33:00.000Z" title="发表于 2021-04-13 22:33:00">2021-04-13</time></div></div></div></div><div class="card-widget" id="card-newest-comments"><div class="item-headline"><i class="fas fa-bolt"></i><span>最新评论</span></div><div class="aside-list"><span>正在加载中...</span></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+            </div>
+            <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/laravel/"><span class="card-category-list-name">laravel</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%B5%8B%E8%AF%95%E5%8C%BA/"><span class="card-category-list-name">测试区</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%A0%81%E4%B8%8D%E8%83%BD%E5%81%9C/"><span class="card-category-list-name">码不能停</span><span class="card-category-list-count">45</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%A0%81%E4%B8%8D%E8%83%BD%E5%81%9C/hexo/"><span class="card-category-list-name">hexo</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%A0%81%E4%B8%8D%E8%83%BD%E5%81%9C/php/"><span class="card-category-list-name">php</span><span class="card-category-list-count">3</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"><span class="card-category-list-name">设计模式</span><span class="card-category-list-count">28</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%97%B2%E8%A8%80%E8%B5%98%E8%AF%AD/"><span class="card-category-list-name">闲言赘语</span><span class="card-category-list-count">13</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E9%97%B2%E8%A8%80%E8%B5%98%E8%AF%AD/%E8%AE%A1%E5%88%92%E6%B8%85%E5%8D%95/"><span class="card-category-list-name">计划清单</span><span class="card-category-list-count">3</span></a></li></ul></li>
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/docker/" style="font-size: 1.32em; color: #99a2ae">docker</a> <a href="/tags/hexo/" style="font-size: 1.19em; color: #999da1">hexo</a> <a href="/tags/js/" style="font-size: 1.28em; color: #99a0aa">js</a> <a href="/tags/keras/" style="font-size: 1.14em; color: #999b9d">keras</a> <a href="/tags/laravel/" style="font-size: 1.41em; color: #99a5b7">laravel</a> <a href="/tags/layim/" style="font-size: 1.1em; color: #999">layim</a> <a href="/tags/layui/" style="font-size: 1.19em; color: #999da1">layui</a> <a href="/tags/openssl/" style="font-size: 1.1em; color: #999">openssl</a> <a href="/tags/php/" style="font-size: 1.46em; color: #99a7bb">php</a> <a href="/tags/python/" style="font-size: 1.19em; color: #999da1">python</a> <a href="/tags/ssh/" style="font-size: 1.1em; color: #999">ssh</a> <a href="/tags/swoole/" style="font-size: 1.1em; color: #999">swoole</a> <a href="/tags/terminal/" style="font-size: 1.1em; color: #999">terminal</a> <a href="/tags/test/" style="font-size: 1.23em; color: #999ea6">test</a> <a href="/tags/vue/" style="font-size: 1.1em; color: #999">vue</a> <a href="/tags/%E7%A0%81%E4%B8%8D%E8%83%BD%E5%81%9C/" style="font-size: 1.1em; color: #999">码不能停</a> <a href="/tags/%E8%AE%A1%E5%88%92%E6%B8%85%E5%8D%95/" style="font-size: 1.19em; color: #999da1">计划清单</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 1.5em; color: #99a9bf">设计模式</a> <a href="/tags/%E9%97%B2%E8%A8%80%E8%B5%98%E8%AF%AD/" style="font-size: 1.37em; color: #99a4b2">闲言赘语</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/07/"><span class="card-archive-list-date">七月 2021</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/05/"><span class="card-archive-list-date">五月 2021</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/04/"><span class="card-archive-list-date">四月 2021</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/03/"><span class="card-archive-list-date">三月 2021</span><span class="card-archive-list-count">33</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/12/"><span class="card-archive-list-date">十二月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/10/"><span class="card-archive-list-date">十月 2020</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/01/"><span class="card-archive-list-date">一月 2020</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2019/10/"><span class="card-archive-list-date">十月 2019</span><span class="card-archive-list-count">2</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">91</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2016-06-09T00:00:00.000Z"></div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2021-07-12T06:41:33.762Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2016 - 2021 By m-finder</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn" target="_blank">豫ICP备18011086号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    let initData = {
+      el: '#vcomment',
+      appId: 'oJB5EXRF33MliWEMIRsv4qr8-MdYXbMMI',
+      appKey: 'qUshUPE75crxuoBS944qJpS5',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: true,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+    
+    if (false) {
+      const otherData = false
+      initData = Object.assign(initData, otherData)
+    }
+    
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.17.0/js/md5.min.js"></script><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getIcon = (icon, mail) => {
+    if (icon) return icon
+    let defaultIcon = '?d=monsterid'
+    let iconUrl = `https://gravatar.loli.net/avatar/${md5(mail.toLowerCase()) + defaultIcon}`
+    return iconUrl
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'data-lazy-src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = () => {
+    const serverURL = 'https://oJB5EXRF.api.lncldglobal.com'
+
+    var settings = {
+      "method": "GET",
+      "headers": {
+        "X-LC-Id": 'oJB5EXRF33MliWEMIRsv4qr8-MdYXbMMI',
+        "X-LC-Key": 'qUshUPE75crxuoBS944qJpS5',
+        "Content-Type": "application/json"
+      },
+    }
+
+    fetch(`${serverURL}/1.1/classes/Comment?limit=6&order=-createdAt`,settings)
+      .then(response => response.json())
+      .then(data => {
+        const valineArray = data.results.map(function (e) {
+          return {
+            'avatar': getIcon(e.QQAvatar, e.mail),
+            'content': changeContent(e.comment),
+            'nick': e.nick,
+            'url': e.url + '#' + e.objectId,
+            'date': e.updatedAt,
+          }
+        })
+        saveToLocal.set('valine-newest-comments', JSON.stringify(valineArray), 10/(60*24))
+        generateHtml(valineArray)
+      }).catch(e => {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.innerHTML= "无法获取评论，请确认相关配置是否正确"
+      }) 
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('valine-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

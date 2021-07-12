@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>laradock 中 php5.6 连接 mysql 报错解决 | M-finder</title><meta name="keywords" content="docker,php"><meta name="author" content="m-finder"><meta name="copyright" content="m-finder"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="laradock 中 php 5.6 连接 mysql 报错的解决方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laradock 中 php5.6 连接 mysql 报错解决">
+<meta property="og:url" content="https://www.m-finder.com/2019/03/21/laradock-php-5-6-connect-mysql/index.html">
+<meta property="og:site_name" content="M-finder">
+<meta property="og:description" content="laradock 中 php 5.6 连接 mysql 报错的解决方法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.m-finder.com/images/top.jpg">
+<meta property="article:published_time" content="2019-03-21T15:00:00.000Z">
+<meta property="article:modified_time" content="2021-07-12T06:40:56.605Z">
+<meta property="article:author" content="m-finder">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="php">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.m-finder.com/images/top.jpg"><link rel="shortcut icon" href="/images/favicon.ico"><link rel="canonical" href="https://www.m-finder.com/2019/03/21/laradock-php-5-6-connect-mysql/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-07-12 14:40:56'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" data-lazy-src="/images/avatar.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://www.m-finder.com/images/top.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">M-finder</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/gallery/"><i class="fa-fw fas fa-images"></i><span> 相册</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">laradock 中 php5.6 连接 mysql 报错解决</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-03-21T15:00:00.000Z" title="发表于 2019-03-21 23:00:00">2019-03-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-07-12T06:40:56.605Z" title="更新于 2021-07-12 14:40:56">2021-07-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%A0%81%E4%B8%8D%E8%83%BD%E5%81%9C/">码不能停</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span><span class="post-meta-separator">|</span><span class="post-meta-commentcount"><i class="far fa-comments fa-fw post-meta-icon"></i><span class="post-meta-label">评论数:</span><a href="/2019/03/21/laradock-php-5-6-connect-mysql/#post-comment" itemprop="discussionUrl"><span class="valine-comment-count" data-xid="/2019/03/21/laradock-php-5-6-connect-mysql/" itemprop="commentCount"></span></a></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>laradock 中 php 5.6 连接 mysql 报错的解决方法。</p>
+<p><img src= "/img/loading.gif" data-lazy-src="/images/laradock.png"></p>
+<span id="more"></span>
+
+<p>之前弄的是默认版本的 php 7.2 和 mysql 8，配置好以后一直都能正常使用。</p>
+<p>最近因为需要切换 php 版本，突然发现切换后连接 mysql 时无法识别 host。</p>
+<p>emmmm……，最开始还以为是 php 的锅，各种重新 build，无果，最后在 github 上找到别人发出来的解决办法：</p>
+<blockquote>
+<p>rm -rf ~/.laradock/data/mysql<br>删除老版本的数据</p>
+<p>docker-compose build mysql<br>重新构建 mysql</p>
+<p>进入 mysql 容器<br>mysql -uroot -p<br>root<br>ALTER USER root IDENTIFIED WITH mysql_native_password BY ‘root’;<br>exit;</p>
+</blockquote>
+<p>到这里也就可以了。</p>
+<p>有这个问题是因为 8 和 5.7 的配置不一样，不清掉老数据的话会引起报错，一有请求去连接 mysql 马上就宕机。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">m-finder</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://www.m-finder.com/2019/03/21/laradock-php-5-6-connect-mysql/">https://www.m-finder.com/2019/03/21/laradock-php-5-6-connect-mysql/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://www.m-finder.com" target="_blank">M-finder</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/docker/">docker</a><a class="post-meta__tags" href="/tags/php/">php</a></div><div class="post_share"><div class="social-share" data-image="https://www.m-finder.com/images/top.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2019/04/03/laravel-events/"><img class="prev-cover" data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">laravel 事件系统学习</div></div></a></div><div class="next-post pull-right"><a href="/2019/03/15/laravel-container/"><img class="next-cover" data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Laravel 服务容器</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2019/04/09/laravel-queues/" title="laravel 队列学习"><img class="cover" data-lazy-src="https://www.m-finder.com/images/top.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-04-09</div><div class="title">laravel 队列学习</div></div></a></div><div><a href="/2018/04/10/Docker-images/" title="Docker使用教程-以Dockerfile定制镜像"><img class="cover" data-lazy-src="https://www.m-finder.com/images/top.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-04-10</div><div class="title">Docker使用教程-以Dockerfile定制镜像</div></div></a></div><div><a href="/2019/07/31/docker-container-connect-localhost/" title="docker 容器访问宿主机端口"><img class="cover" data-lazy-src="https://www.m-finder.com/images/top.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-31</div><div class="title">docker 容器访问宿主机端口</div></div></a></div><div><a href="/2018/03/27/docker-install/" title="Docker安装教程"><img class="cover" data-lazy-src="https://www.m-finder.com/images/top.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-03-27</div><div class="title">Docker安装教程</div></div></a></div><div><a href="/2019/08/18/docker-php-zend-guard/" title="在 docker 容器中安装 zend guard"><img class="cover" data-lazy-src="https://www.m-finder.com/images/top.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-08-18</div><div class="title">在 docker 容器中安装 zend guard</div></div></a></div><div><a href="/2018/03/28/docker-use/" title="Docker使用教程-入门"><img class="cover" data-lazy-src="https://www.m-finder.com/images/top.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-03-28</div><div class="title">Docker使用教程-入门</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" data-lazy-src="/images/avatar.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">m-finder</div><div class="author-info__description">happy coding</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">91</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">19</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/m-finder"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/m-finder" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:m@m-finder.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/07/12/2021-to-do-list/" title="2021 年计划清单"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2021 年计划清单"/></a><div class="content"><a class="title" href="/2021/07/12/2021-to-do-list/" title="2021 年计划清单">2021 年计划清单</a><time datetime="2021-07-12T06:40:56.601Z" title="发表于 2021-07-12 14:40:56">2021-07-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/19/m1-php-ssh2/" title="mac m1 下安装 php7.4 ssh2 扩展"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mac m1 下安装 php7.4 ssh2 扩展"/></a><div class="content"><a class="title" href="/2021/05/19/m1-php-ssh2/" title="mac m1 下安装 php7.4 ssh2 扩展">mac m1 下安装 php7.4 ssh2 扩展</a><time datetime="2021-05-19T13:22:13.000Z" title="发表于 2021-05-19 21:22:13">2021-05-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/11/centos-php74/" title="centos php7.4 安装记录"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="centos php7.4 安装记录"/></a><div class="content"><a class="title" href="/2021/05/11/centos-php74/" title="centos php7.4 安装记录">centos php7.4 安装记录</a><time datetime="2021-05-11T13:22:13.000Z" title="发表于 2021-05-11 21:22:13">2021-05-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/21/laravel-excel-import-bug/" title="laravel 导入 excel 报错排查记录"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="laravel 导入 excel 报错排查记录"/></a><div class="content"><a class="title" href="/2021/04/21/laravel-excel-import-bug/" title="laravel 导入 excel 报错排查记录">laravel 导入 excel 报错排查记录</a><time datetime="2021-04-21T13:22:13.000Z" title="发表于 2021-04-21 21:22:13">2021-04-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/13/distributed-system/" title="一句话看懂集群、微服务和分布式的区别"><img data-lazy-src="https://www.m-finder.com/images/top.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一句话看懂集群、微服务和分布式的区别"/></a><div class="content"><a class="title" href="/2021/04/13/distributed-system/" title="一句话看懂集群、微服务和分布式的区别">一句话看懂集群、微服务和分布式的区别</a><time datetime="2021-04-13T14:33:00.000Z" title="发表于 2021-04-13 22:33:00">2021-04-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2016 - 2021 By m-finder</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text"><a href="https://beian.miit.gov.cn" target="_blank">豫ICP备18011086号-1</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    let initData = {
+      el: '#vcomment',
+      appId: 'oJB5EXRF33MliWEMIRsv4qr8-MdYXbMMI',
+      appKey: 'qUshUPE75crxuoBS944qJpS5',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: true,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+    
+    if (false) {
+      const otherData = false
+      initData = Object.assign(initData, otherData)
+    }
+    
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = false;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
